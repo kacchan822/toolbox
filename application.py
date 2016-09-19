@@ -15,7 +15,10 @@ import bottle
 app = application = bottle.Bottle()
 
 ## for logging
-import uwsgi
+try:
+    import uwsgi
+except:
+    pass
 
 ## my_package
 from a2pcej import conv_al, conv_ak
@@ -94,7 +97,10 @@ def pwgen():
 @app.route('/api/pwgen/pwgen.json', method='POST')
 def api_pwgen_json():
     json_d = bottle.request.json
-    uwsgi.set_logvar('postjson', str(json_d))
+    try:
+        uwsgi.set_logvar('postjson', str(json_d))
+    except:
+        pass
     password_rule = {
         '1':{'alphabet':True, 'uppercase':True, 'number':False, 'symbol':False},
         '2':{'alphabet':True, 'uppercase':False, 'number':False, 'symbol':False},
@@ -119,6 +125,55 @@ def api_pwgen_json():
     return json_response(data_dict, 200)
 
 
+@app.route('/cryptpw')
+def cryptpw():
+    return bottle.template('cryptpw')
+
+
+@app.route('/api/cryptpw/cryptpw.json', method='POST')
+def api_cryptpw_json():
+    json_d = bottle.request.json
+    try:
+        uwsgi.set_logvar('postjson', str(json_d))
+    except:
+        pass
+
+    method1_reg = re.compile('^(1|MD5-CRYPT|\$1\$)')
+    method5_reg = re.compile('^(5|SHA256-CRYPT|\$5\$)')
+    method6_reg = re.compile('^(6|SHA512-CRYPT|\$6\$)')
+
+    response_data = []
+    for data in json_d:
+        plain_password = data['plain_password']
+        crypt_method = data['crypt_method']
+        crypted_password = data['crypted_password']
+
+        if method1_reg.search(crypt_method) or method1_reg.search(crypted_password):
+            filterd_crypt_method = '1'
+        elif method5_reg.search(crypt_method) or method5_reg.search(crypted_password):
+            filterd_crypt_method = '5'
+        elif method6_reg.search(crypt_method) or method6_reg.search(crypted_password):
+            filterd_crypt_method = '6'
+        else:
+            filterd_crypt_method = None
+
+        if crypted_password:
+            check_result = check_password(plain_password, crypted_password)
+        else:
+            if filterd_crypt_method:
+                crypted_password = gen_crypt_password(plain_password, method=filterd_crypt_method)
+            else:
+                crypted_password = gen_crypt_password(plain_password, method='6')
+                filterd_crypt_method = '6'
+            check_result = True
+
+        response_data.append({
+            'plain_password': plain_password,
+            'crypt_method': filterd_crypt_method,
+            'crypted_password': crypted_password,
+            'check': check_result
+        })
+    return json_response(json.dumps(response_data), 200)
 
 
 ## for development ###########################################################

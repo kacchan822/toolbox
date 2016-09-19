@@ -48,3 +48,15 @@ footer {
     background-color: #fff;
     border-radius: 8px;
 }
+
+.table {
+    background-color: #fff;
+}
+
+.error_row {
+    background-color: #d9534f;
+}
+
+.sucsess_row {
+    background-color: #5cb85c;
+}
