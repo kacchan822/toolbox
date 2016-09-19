@@ -13,8 +13,9 @@
             % end
         </div></div>
         <div class="col-sm-8">
-        <p>公開しているツールのソースコードや、このページを生成しているソースコードは、
-            <a href="https://github.com/kacchan822/toolbox">Github上で公開</a>しています。</p>
+            <p>公開しているツールのソースコードは、<a href="https://github.com/kacchan822/toolbox">Github上で公開</a>しています。</p>
+            <p>公開しているツールの作成には、Python3、bottleを使用しています。</p>
+            <p>Password Generatorのパスワードのよみがな・Phonetic Code生成には、拙作パッケージの<a href="https://pypi.python.org/pypi/a2pcej">a2pcej</a>を使用しています。</p>
         </div>
         <div class="col-sm-4">
             <a href="http://bottlepy.org/"><img class="img-responsive" src="/static/img/bottle_logo.png"></a>
