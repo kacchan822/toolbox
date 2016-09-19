@@ -107,7 +107,7 @@ def pwgen():
         'yomigana': conv_ak(password),
         'phonetic_code':conv_al(password),
     }
-    return bottle.template('pwgen', **data_dict)
+    return bottle.template('pwgen', page_title='Password Generator', **data_dict)
 
 
 @app.route('/api/pwgen/pwgen.json', method='POST')
@@ -143,7 +143,7 @@ def api_pwgen_json():
 
 @app.route('/cryptpw')
 def cryptpw():
-    return bottle.template('cryptpw')
+    return bottle.template('cryptpw', page_title='Crypt Passwords')
 
 
 @app.route('/api/cryptpw/cryptpw.json', method='POST')
