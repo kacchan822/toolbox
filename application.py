@@ -79,7 +79,23 @@ def json_response(data, response_code):
 ## Routings
 @app.route('/')
 def home():
-    return  bottle.redirect('/pwgen')
+    data_dict = {
+        'data': [
+        {
+            'page_name':'Password Generator',
+            'page_uri':'/pwgen',
+            'page_description':'パスワードを自動生成して、パスワードの暗号化文字列やよみがなを表示します。',
+            'page_version':'version:0.1.0 (2016/09/17 release)',
+        },
+        {
+            'page_name':'Crypt Passwords',
+            'page_uri':'/cryptpw',
+            'page_description':'パスワードの暗号化」・「暗号化されたパスワードと平文パスワードの一致確認」ができます。',
+            'page_version':'version:0.1.0 (2016/09/19 release)',
+        },
+        ]
+    }
+    return  bottle.template('home', **data_dict)
 
 
 @app.route('/pwgen')

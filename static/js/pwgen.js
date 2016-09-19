@@ -22,9 +22,9 @@ $('#generate_password').on('click', function(event) {
         $('#generate_password_form').find('input').each(function(i) {
             $(this).attr('value', res[$(this).attr('name')])
         });
-        console.log('success', res)
+        // console.log('success', res)
     }).fail(function( jqXHR, textStatus, errorThrown ) {
-        console.log('error', res)
+        // console.log('error', res)
     });
 });
 //end code
