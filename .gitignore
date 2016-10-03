@@ -4,13 +4,9 @@ include/
 lib/
 lib64/
 share/
+ENV/
 
-lib64
-pip-selfcheck.json
-pyvenv.cfg
-uwsgi_lical.ini
 
 *.log
 *.pid
 *.socket
-*.trigger
