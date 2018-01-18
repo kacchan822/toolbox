@@ -150,5 +150,5 @@ def server_static(filepath):
 
 ## Run server for development
 if __name__ == '__main__':
-    bottle.run(app, host='127.0.0.1', port=3000, debug=True, reloader=True)
+    app.run(host='127.0.0.1', port=3000, debug=True, reloader=True)
 
