@@ -143,6 +143,11 @@ def api_cryptpw_json():
     return json_response(json.dumps(response_data), 200)
 
 
+@app.route('/robots.txt')
+def server_static():
+    return bottle.static_file('robots.txt', root='./static/')
+
+
 @app.route('/static/<filepath:path>')
 def server_static(filepath):
     return bottle.static_file(filepath, root='./static/')
