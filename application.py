@@ -1,3 +1,5 @@
+from collections import OrderedDict
+import datetime
 import json
 import re
 import os
@@ -141,6 +143,32 @@ def api_cryptpw_json():
             'check': check_result
         })
     return json_response(json.dumps(response_data), 200)
+
+
+@app.route('/echo-json', method=['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+@app.route('/echo-json/<status_code:int>', method=['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+def echo_json(status_code=200):
+    """ return request with json format """
+    if not 999 >= status_code >= 100:
+        raise bottle.HTTPError(status=421)
+    request = bottle.request
+    auth = ':'.join(request.auth) if request.auth else ''
+    data = (
+        ('hostname', os.uname()[1]),
+        ('method', request.method),
+        ('path', request.path),
+        ('get', dict(request.GET)),
+        ('post', dict(request.POST)),
+        ('headers', dict(request.headers)),
+        ('cookies', dict(request.cookies)),
+        ('authentication', auth),
+        ('body', request.body.read().decode()),
+        ('is_xhr', request.is_xhr),
+        ('is_ajax', request.is_ajax),
+        ('datetime', datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')),
+    )
+    data_dict = OrderedDict(data)
+    return json_response(data_dict, status_code)
 
 
 @app.route('/robots.txt')
