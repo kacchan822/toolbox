@@ -143,17 +143,12 @@ def api_cryptpw_json():
     return json_response(json.dumps(response_data), 200)
 
 
-## for development ###########################################################
 @app.route('/static/<filepath:path>')
 def server_static(filepath):
     return bottle.static_file(filepath, root='./static/')
 
+
+## Run server for development
 if __name__ == '__main__':
-    bottle.run(
-        app,
-        host='127.0.0.1',
-        port=3000,
-        debug=True,
-        reloader=True
-    )
-##############################################################################
+    bottle.run(app, host='127.0.0.1', port=3000, debug=True, reloader=True)
+
