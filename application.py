@@ -144,7 +144,7 @@ def api_cryptpw_json():
 
 
 @app.route('/robots.txt')
-def server_static():
+def robots_txt():
     return bottle.static_file('robots.txt', root='./static/')
 
 
@@ -156,4 +156,3 @@ def server_static(filepath):
 ## Run server for development
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=3000, debug=True, reloader=True)
-
