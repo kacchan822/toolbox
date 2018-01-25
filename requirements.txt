@@ -1,3 +1,4 @@
 a2pcej==0.2.3
-bottle==0.12.13
-gunicorn>=19
+bottle<0.13,>=0.12
+Jinja2<2.11,>=2.10
+gunicorn<19.8,>=19.7

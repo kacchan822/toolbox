@@ -1,16 +1,17 @@
-% rebase('base.tpl')
+{% extends 'base.html' %}
+{% block content %}
 <section>
     <h2>Tools Index<br><small>公開しているツールのインデックスページです。</small></h2>
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
         <div class="list-group">
-            % for data in data:
-            <a href="{{data['page_uri']}}" class="list-group-item">
-                <h4 class="list-group-item-heading">{{data['page_name']}}</h4>
-                <p class="list-group-item-text">{{data['page_description']}}</p>
-                <p class="list-group-item-text text-right">{{data['page_version']}}</p>
+            {% for data in data %}
+            <a href="{{ data.page_uri }}" class="list-group-item">
+                <h4 class="list-group-item-heading">{{ data.page_name }}</h4>
+                <p class="list-group-item-text">{{ data.page_description }}</p>
+                <p class="list-group-item-text text-right">{{ data.page_version }}</p>
             </a>
-            % end
+            {% endfor %}
         </div></div>
         <div class="col-sm-8">
             <p>公開しているツールのソースコードは、<a href="https://github.com/kacchan822/toolbox">Github上で公開</a>しています。</p>
@@ -23,3 +24,4 @@
         </div>
     </div>
 </section>
+{% endblock content %}

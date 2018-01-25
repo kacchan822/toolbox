@@ -1,4 +1,5 @@
-% rebase('base.tpl', add_js='pwgen.js')
+{% extends 'base.html' %}
+{% block content %}
 <section>
 <h2>Password Generator<br><small>パスワードを自動生成して、パスワードの暗号化文字列やよみがなを表示します。</small></h2>
 <div class="jumbotron">
@@ -98,3 +99,5 @@
 
 </div>
 </section>
+{% endblock content %}
+{% block extrajs %}<script src="/static/js/pwgen.js"></script>{% endblock extrajs %}

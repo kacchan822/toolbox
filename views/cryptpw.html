@@ -1,4 +1,5 @@
-% rebase('base.tpl', add_js='cryptpw.js')
+{% extends 'base.html' %}
+{% block content %}
 <section>
 <h2>Crypt Passwords<br><small>「パスワードの暗号化」・「暗号化されたパスワードと平文パスワードの一致確認」ができます。</small></h2>
 <div class="jumbotron">
@@ -48,3 +49,5 @@
  <p><b>パスワード（平文）とパスワード（暗号化）のペアが正しいか確認する</b>ときは、「パスワード（平文）」と「パスワード（暗号化）」の欄を入力してください。<br>暗号化方式を指定する必要はありません（暗号化されたパスワードから認識します）。一致しなかった場合は、行背景が赤くなります。</p>
  <p>「パスワード（暗号化）」の欄に入力があると、「<b>パスワード（平文）とパスワード（暗号化）のペアが正しいか確認する</b>」動作となります。</p>
 </section>
+{% endblock content %}
+{% block extrajs %}<script src="/static/js/cryptpw.js"></script>{% endblock extrajs %}

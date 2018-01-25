@@ -4,33 +4,27 @@ import json
 import re
 import os
 
-import bottle
-
-from tools.password import gen_password, gen_crypt_password, check_password_crypted, check_password
-
-## bottle settings
-app = application = bottle.Bottle()
-
-## for logging
-try:
-    import uwsgi
-except:
-    pass
-
-## my_package
+from bottle import (route, get, post, run, static_file, default_app,
+                    request, HTTPResponse, HTTPError,
+                    jinja2_template as template)
 from a2pcej import conv_al, conv_ak
 
+from tools.password import (gen_password, gen_crypt_password,
+                            check_password_crypted, check_password)
 
-## common functions
+# bottle settings
+app = default_app()
+
+# common functions
 def json_response(data, response_code):
-    res = bottle.HTTPResponse(status=response_code, body=data)
+    res = HTTPResponse(status=response_code, body=data)
     # res.set_header('Content-Type', 'application/json; charset=utf-8')
     res.set_header('Content-Type', 'application/vnd.collection+json; charset=utf-8')
     return res
 
 
-## Routings
-@app.route('/')
+# Routings
+@get('/')
 def home():
     data_dict = {
         'data': [
@@ -48,10 +42,10 @@ def home():
         },
         ]
     }
-    return  bottle.template('home', **data_dict)
+    return  template('home', **data_dict)
 
 
-@app.route('/pwgen')
+@get('/pwgen')
 def pwgen():
     password = gen_password(symbol=False)
     data_dict = {
@@ -60,12 +54,12 @@ def pwgen():
         'yomigana': conv_ak(password),
         'phonetic_code':conv_al(password),
     }
-    return bottle.template('pwgen', page_title='Password Generator', **data_dict)
+    return template('pwgen', page_title='Password Generator', **data_dict)
 
 
-@app.route('/api/pwgen/pwgen.json', method='POST')
+@post('/api/pwgen/pwgen.json')
 def api_pwgen_json():
-    json_d = bottle.request.json
+    json_d = request.json
     try:
         uwsgi.set_logvar('postjson', str(json_d))
     except:
@@ -94,18 +88,14 @@ def api_pwgen_json():
     return json_response(data_dict, 200)
 
 
-@app.route('/cryptpw')
+@get('/cryptpw')
 def cryptpw():
-    return bottle.template('cryptpw', page_title='Crypt Passwords')
+    return template('cryptpw', page_title='Crypt Passwords')
 
 
-@app.route('/api/cryptpw/cryptpw.json', method='POST')
+@post('/api/cryptpw/cryptpw.json')
 def api_cryptpw_json():
-    json_d = bottle.request.json
-    try:
-        uwsgi.set_logvar('postjson', str(json_d))
-    except:
-        pass
+    json_d = request.json
 
     method1_reg = re.compile('^(1|MD5-CRYPT|\$1\$)')
     method5_reg = re.compile('^(5|SHA256-CRYPT|\$5\$)')
@@ -145,13 +135,12 @@ def api_cryptpw_json():
     return json_response(json.dumps(response_data), 200)
 
 
-@app.route('/echo-json', method=['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
-@app.route('/echo-json/<status_code:int>', method=['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+@route('/echo-json', method=['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+@route('/echo-json/<status_code:int>', method=['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def echo_json(status_code=200):
     """ return request with json format """
     if not 999 >= status_code >= 100:
-        raise bottle.HTTPError(status=421)
-    request = bottle.request
+        raise HTTPError(status=421)
     auth = ':'.join(request.auth) if request.auth else ''
     data = (
         ('hostname', os.uname()[1]),
@@ -171,16 +160,16 @@ def echo_json(status_code=200):
     return json_response(data_dict, status_code)
 
 
-@app.route('/robots.txt')
+@get('/robots.txt')
 def robots_txt():
-    return bottle.static_file('robots.txt', root='./static/')
+    return static_file('robots.txt', root='./static/')
 
 
-@app.route('/static/<filepath:path>')
+@get('/static/<filepath:path>')
 def server_static(filepath):
-    return bottle.static_file(filepath, root='./static/')
+    return static_file(filepath, root='./static/')
 
 
 ## Run server for development
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=3000, debug=True, reloader=True)
+    run(host='127.0.0.1', port=3000, debug=True, reloader=True)
